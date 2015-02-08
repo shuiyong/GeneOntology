@@ -7,6 +7,7 @@
       <itemPath>Ontology.h</itemPath>
       <itemPath>OntologyNode.h</itemPath>
       <itemPath>Parser.h</itemPath>
+      <itemPath>ShortestPathGraph.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -24,6 +25,7 @@
       <itemPath>Ontology.cpp</itemPath>
       <itemPath>OntologyNode.cpp</itemPath>
       <itemPath>Parser.cpp</itemPath>
+      <itemPath>ShortestPathGraph.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -59,6 +61,10 @@
       <item path="Parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShortestPathGraph.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShortestPathGraph.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="biogrid_ppi_cln.txt" ex="false" tool="3" flavor2="0">
       </item>
@@ -106,6 +112,10 @@
       <item path="Parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShortestPathGraph.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShortestPathGraph.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="biogrid_ppi_cln.txt" ex="false" tool="3" flavor2="0">
       </item>

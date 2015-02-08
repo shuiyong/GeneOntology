@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Ontology.o \
 	${OBJECTDIR}/OntologyNode.o \
 	${OBJECTDIR}/Parser.o \
+	${OBJECTDIR}/ShortestPathGraph.o \
 	${OBJECTDIR}/main.o
 
 
@@ -79,6 +80,11 @@ ${OBJECTDIR}/Parser.o: Parser.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser.o Parser.cpp
+
+${OBJECTDIR}/ShortestPathGraph.o: ShortestPathGraph.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShortestPathGraph.o ShortestPathGraph.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

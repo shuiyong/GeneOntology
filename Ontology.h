@@ -8,9 +8,12 @@
 #ifndef ONTOLOGY_H
 #define	ONTOLOGY_H
 #include "OntologyNode.h"
+#include "ShortestPathGraph.h"
 #include <map>
 #include <set>
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 using namespace std;
 
 enum GO_TYPE {BP,MF,CC,ERR};
@@ -24,48 +27,38 @@ class Ontology {
 public:
     Ontology();
     
-    Ontology(GO_TYPE type){
-        this->type = type;
-    }
+    Ontology(GO_TYPE type);
     
     Ontology(const Ontology& orig);
     
-    void addNode(ID_TYPE id){
-        if(graph.find(id) == graph.end()){
-            OntologyNode *np = new OntologyNode(id);
-            graph[id] = np;
-        }
-    }
+    void addNode(ID_TYPE id);
     
-    void addEdge(ID_TYPE parent, ID_TYPE child){
-        addNode(parent);
-        addNode(child);
-        graph[parent]->addChild(graph[child]);
-        graph[child]->addParent(graph[parent]);
-    }
+    void addEdge(ID_TYPE parent, ID_TYPE child);
     
-    void addAnnotation(ID_TYPE id, string anno){
-        graph[id]->addAnnotation(anno);
-    }
+    void addAnnotation(ID_TYPE id, string anno);
     
-    void printGraph(ofstream &out){
-        out<<"graph size() = "<<graph.size()<<endl;
-        int i = 0;
-        for(map<ID_TYPE, OntologyNode *>::iterator it = graph.begin(); it != graph.end() ; it++){
-            out<<"["<<i++<<"]"<<endl;
-            it->second->printNode(out);
-            out<<endl;
-        }
-    }
+    size_t getNumOfAnnotation();
+    
+    size_t getNumOfAnnotation(ID_TYPE id);
+    
+    double getIC(ID_TYPE id); //return the Information Contest;
+    
+    double getOntologyNodeSim(ID_TYPE id1, ID_TYPE id2, string method);//return the similarity between to ontology node
+    
+    double getGeneSim(string g1, string g2, string method);// return the similarity between two gene product
+    
+    void printGraph(ofstream &out);
+    
+    ShortestPathGraph getSPG(string pro);
     
     virtual ~Ontology();
     
-    GO_TYPE getType(){
-        return type;
-    }
+    GO_TYPE getType();
 private:
     GO_TYPE type;
     map<ID_TYPE, OntologyNode *> graph;
+    map<string, set<ID_TYPE> > annotation;
+    map<ID_TYPE, double> infoCon;
 };
 
 GO_TYPE strToGoType(string tmp);
