@@ -11,6 +11,7 @@
 
 OntologyNode::OntologyNode(ID_TYPE id) {
     ID = id;
+    IC = -1;
 }
 
 OntologyNode::OntologyNode(const OntologyNode& orig) {
@@ -39,16 +40,22 @@ void OntologyNode::addChild(OntologyNode *child) {
 
 set<OntologyNode *> OntologyNode::getParents(){
     set<OntologyNode *> tmp = parent;
+    set<ID_TYPE> isVisited; 
     queue<OntologyNode *> list;
     for(set<OntologyNode *>::iterator it = parent.begin(); it != parent.end(); it++){
         list.push(*it);
+        isVisited.insert((*it)->getID());
     }
     
     while(!list.empty()){
         OntologyNode *pointer = list.front();
         list.pop();
-        for(set<OntologyNode *>::iterator it = pointer->children.begin(); it != pointer->children.end(); it++){
-            list.push(*it);
+        for(set<OntologyNode *>::iterator it = pointer->parent.begin(); it != pointer->parent.end(); it++){
+            if(isVisited.find((*it)->getID()) == isVisited.end())
+            {
+                list.push(*it);
+                isVisited.insert((*it)->getID());;
+            }
         }
         tmp.insert(pointer->parent.begin(),pointer->parent.end());
     }
@@ -58,8 +65,10 @@ set<OntologyNode *> OntologyNode::getParents(){
 void OntologyNode::loadSubGraph(map<ID_TYPE, map<ID_TYPE, double> > &myList, set<ID_TYPE> &myAllNodes){
     myAllNodes.insert(getID());
     queue<OntologyNode *> list;
+    set<ID_TYPE> tmp;
     for(set<OntologyNode *>::iterator it = parent.begin(); it != parent.end(); it++){
         list.push(*it);
+        tmp.insert((*it)->getID());
     }
     
     for(set<OntologyNode *>::iterator i = parent.begin(); i != parent.end(); i++){
@@ -70,8 +79,11 @@ void OntologyNode::loadSubGraph(map<ID_TYPE, map<ID_TYPE, double> > &myList, set
     while(!list.empty()){
         OntologyNode *pointer = list.front();
         list.pop();
-        for(set<OntologyNode *>::iterator it = pointer->children.begin(); it != pointer->children.end(); it++){
-            list.push(*it);
+        for(set<OntologyNode *>::iterator it = pointer->parent.begin(); it != pointer->parent.end(); it++){
+            if(tmp.find((*it)->getID()) == tmp.end()){
+                list.push(*it);
+                tmp.insert((*it)->getID());
+            }
         }
         
         for(set<OntologyNode *>::iterator i = pointer->parent.begin(); i != pointer->parent.end(); i++){
@@ -104,15 +116,20 @@ void OntologyNode::addAnnotation(string anno) {
 size_t OntologyNode::getNumOfAnnotation(){
     set<string> tmp = proteins;
     queue<OntologyNode *> list;
+    set<ID_TYPE> isVisited;
     for(set<OntologyNode *>::iterator it = children.begin(); it != children.end(); it++){
         list.push(*it);
+        isVisited.insert((*it)->getID());
     }
     
     while(!list.empty()){
         OntologyNode *pointer = list.front();
         list.pop();
         for(set<OntologyNode *>::iterator it = pointer->children.begin(); it != pointer->children.end(); it++){
-            list.push(*it);
+            if(isVisited.find((*it)->getID()) == isVisited.end()){
+                list.push(*it);
+                isVisited.insert((*it)->getID());
+            }
         }
         tmp.insert(pointer->proteins.begin(),pointer->proteins.end());
     }

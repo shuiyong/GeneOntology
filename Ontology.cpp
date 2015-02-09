@@ -65,14 +65,14 @@ void Ontology::printGraph(ofstream &out) {
 double Ontology::getGeneSim(string g1, string g2, string method){
     
     if(method.compare("me") == 0){
-        ShortestPathGraph t1 =  getSPG(g1);
-        ShortestPathGraph t2 =  getSPG(g2);
-        return getGraphSim(t1,t2);
+        return getGraphSim(spg[g2],spg[g1]);
     }
-    
+    //cout<<"size = "<<annotation[g1].size()<<'\t'<<annotation[g2].size()<<endl;
+    int count = 0;
     double res = 0;
     for(set<ID_TYPE>::iterator i = annotation[g1].begin(); i != annotation[g1].end(); i++){
         for(set<ID_TYPE>::iterator j = annotation[g2].begin(); j != annotation[g2].end(); j++){
+            //cout<<"getGeneSim = "<<count++<<endl;
             res += getOntologyNodeSim(*i, *j, method);
         }
     }
@@ -84,21 +84,24 @@ double Ontology::getOntologyNodeSim(ID_TYPE id1, ID_TYPE id2, string method){
     set<OntologyNode *> p2 = graph[id2]->getParents();
     double ic1 = getIC(id1);
     double ic2 = getIC(id2);
+    if(ic1 == -1 || ic2 == -1)
+        return 0;
     double res = 0;
     for(set<OntologyNode *>::iterator i = p1.begin(); i != p1.end(); i++){
-            if(p2.find(*i) == p2.end())
-                continue;
-            if(method.compare("resnik") == 0 || method.compare("jiang") == 0){
-                res = max(res, getIC((*i)->getID()));
-            }
-            if(method.compare("lin") == 0){
-                res = max(res, 2 * getIC((*i)->getID()) / ( ic1 + ic2));
-            }
+        if (p2.find(*i) == p2.end())
+            continue;
+        double tx = getIC((*i)->getID());
+        if (method.compare("resnik") == 0 || method.compare("jiang") == 0) {
+            res = max(res, tx);
+        }
+        if (method.compare("lin") == 0) {
+            res = max(res, 2 * tx / (ic1 + ic2));
+        }
+        
     }
     if(method.compare("jiang") == 0){
         res = 1 / (1 + ic1 + ic2 - 2 * res);
     }
-    
     return res;
 }
 
@@ -110,28 +113,40 @@ size_t Ontology::getNumOfAnnotation(){
     return annotation.size();
 }
 
+void Ontology::computeIC(){
+    int count = 50;
+    for(map<ID_TYPE,OntologyNode *>::iterator it = graph.begin(); it != graph.end();it++){
+        if(getNumOfAnnotation(it->first) == 0)
+            infoCon[it->first] = -1;
+        else
+            infoCon[it->first] = -log( (double)getNumOfAnnotation(it->first) / getNumOfAnnotation());
+    }
+}
+
 double Ontology::getIC(ID_TYPE id){
-    if(infoCon.find(id) != infoCon.end())
-        infoCon[id] = -log(getNumOfAnnotation(id) / getNumOfAnnotation());
     return infoCon[id];
 }
 
-ShortestPathGraph Ontology::getSPG(string pro){
+void Ontology::getSPG(string pro){
+    if(spg.find(pro) != spg.end())
+        return;
     map<ID_TYPE, map<ID_TYPE, double> > myList;
     set<ID_TYPE> myAllNodes;
     
+    //cout<<"size = "<<annotation[pro].size()<<endl;
     for(set<ID_TYPE>::iterator it = annotation[pro].begin(); it != annotation[pro].end(); it++){
-        graph[*it]->loadSubGraph(myList,myAllNodes);
+        //cout<<*it<<endl;
+        graph[*it]->loadSubGraph(myList,myAllNodes); // 0070816
     }
-    
+    //cout<<"size = "<<"end"<<endl;
     for(map<ID_TYPE, map<ID_TYPE, double> >::iterator i = myList.begin(); i != myList.end();i++){
         for(map<ID_TYPE, double>::iterator j = i->second.begin(); j!= i->second.end();j++){
             j->second = getIC(i->first) - getIC(j->first);
         }
     }
-    
+    //cout<<"Computing Shortest Path"<<endl;
     ShortestPathGraph sgp(myList,myAllNodes);
-    return sgp;
+    spg[pro] = sgp;
 }
 
 GO_TYPE Ontology::getType() {

@@ -7,16 +7,12 @@
 
 #include "ShortestPathGraph.h"
 
-ShortestPathGraph::ShortestPathGraph(map<ID_TYPE, map<ID_TYPE, double> > &myList, set<ID_TYPE> &myAllNodes) {
+ShortestPathGraph::ShortestPathGraph(){}
+
+ShortestPathGraph::ShortestPathGraph(map<ID_TYPE, map<ID_TYPE, double> > &myList, set<ID_TYPE> &myAllNodes){
     list.insert(myList.begin(), myList.end());
     allNodes.insert(myAllNodes.begin(), myAllNodes.end());
     calculateShortestPath();
-}
-
-ShortestPathGraph::ShortestPathGraph(const ShortestPathGraph& orig) {
-}
-
-ShortestPathGraph::~ShortestPathGraph() {
 }
 
 void ShortestPathGraph::calculateShortestPath(){
@@ -38,6 +34,9 @@ void ShortestPathGraph::calculateShortestPath(){
             }
         }
     }
+    
+    
+    allNodes.clear();
 }
 
 double getGraphSim(ShortestPathGraph &g1,ShortestPathGraph &g2){
@@ -63,3 +62,5 @@ double ShortestPathGraph::getLength(){
     }
     return sqrt(res);
 }
+
+ShortestPathGraph::~ShortestPathGraph(){}

@@ -45,7 +45,7 @@ public:
     virtual ~OntologyNode();
 private:
     ID_TYPE ID;
-    
+    double IC;
     set<OntologyNode *> parent;
     set<OntologyNode *> children;
     set<string> proteins;

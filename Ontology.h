@@ -49,7 +49,9 @@ public:
     
     void printGraph(ofstream &out);
     
-    ShortestPathGraph getSPG(string pro);
+    void getSPG(string pro);
+    
+    void computeIC();
     
     virtual ~Ontology();
     
@@ -59,6 +61,7 @@ private:
     map<ID_TYPE, OntologyNode *> graph;
     map<string, set<ID_TYPE> > annotation;
     map<ID_TYPE, double> infoCon;
+    map<string, class ShortestPathGraph> spg;
 };
 
 GO_TYPE strToGoType(string tmp);
