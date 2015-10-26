@@ -47,10 +47,10 @@ double getGraphSim(ShortestPathGraph &g1,ShortestPathGraph &g2){
                 continue;
             if(g1.list[i->first].find(j->first) == g1.list[i->first].end())
                 continue;
-            res += g1.list[i->first][j->first] * j->second;
+            res += max(0.0,2 - abs(g1.list[i->first][j->first] - j->second));//g1.list[i->first][j->first] * j->second;
         }
     }
-    return res / (g1.getLength() * g2.getLength());
+    return res;//res / (g1.getLength() * g2.getLength());
 }
 
 double ShortestPathGraph::getLength(){

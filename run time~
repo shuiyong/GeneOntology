@@ -1,0 +1,54 @@
+run time: lin, jiang, resnik's method for getting the two gene's similarity is O(m * n * p1 * p2), where gene 1 annotates m geneontology nodes, while gene 2 annotates n geneontology nodes. p1 is the average number of parent node of gene 1's  geneontology nodes, while p2 is average number of parent node of gene 2's geneontology nodes.
+
+run time, VICD for getting the two gene's similarity  is O(n^3) while n is the number of nodes annotated by one gene and all of their ancesters.
+
+space complexity:
+O(n) for storing the geneontolgy. And n is the number of the edges in the geneontoly.
+
+lin, jiang, resnik's method doesn't need additional space.
+
+VINC needs another o(m) space while m is the number of edge in the shortest path graph.
+
+BP lin
+real	2m35.834s
+user	1m44.572s
+sys	0m0.820s
+
+BP jiang
+real	2m29.864s
+user	1m44.116s
+sys	0m0.820s
+
+
+BP Resnik
+
+real	2m14.143s
+user	1m41.628s
+sys	0m0.832s
+
+MF lin
+real	0m45.959s
+user	0m32.716s
+sys	0m0.572s
+
+MF jiang
+real	0m45.676s
+user	0m32.796s
+sys	0m0.424s
+
+MF resnik
+real	0m45.044s
+user	0m32.628s
+sys	0m0.464s
+
+BP VICD
+real	78m45.676s
+user	43m30.228s
+sys	0m1.152s
+
+
+MF VICD
+real	49m17.564s
+user	19m54.076s
+sys	0m0.836s
+

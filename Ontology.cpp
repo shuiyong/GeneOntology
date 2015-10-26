@@ -102,6 +102,9 @@ double Ontology::getOntologyNodeSim(ID_TYPE id1, ID_TYPE id2, string method){
     if(method.compare("jiang") == 0){
         res = 1 / (1 + ic1 + ic2 - 2 * res);
     }
+    if(method.compare("ICND") == 0){
+        res = res / (2 *  (-res) - ic1 - ic2 + 1);
+    }
     return res;
 }
 
